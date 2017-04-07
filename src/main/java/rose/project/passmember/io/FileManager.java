@@ -4,6 +4,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 import rose.project.passmember.gui.GUI;
+import rose.project.passmember.util.entry.Entry;
+import rose.project.passmember.util.entry.FolderEntry;
 import rose.project.passmember.util.entry.PasswordEntry;
 
 import javax.swing.*;
@@ -110,9 +112,7 @@ public class FileManager {
 
             // root elements
             Document doc = docBuilder.newDocument();
-            Element rootElement = doc.createElement("passwords");
-            doc.appendChild(rootElement);
-            FileManager.exportAsXML(rootElement, doc, entries);
+            FileManager.exportAsXML(null, doc, entries);
 
 
             // set attribute to staff element
@@ -151,37 +151,43 @@ public class FileManager {
         }
     }
 
-    private static Element exportAsXML(Element currentNode, Document doc, DefaultMutableTreeNode tree) {
-        if(tree.getChildCount() == 0) {
-            PasswordEntry currentPassword = (PasswordEntry) tree.getUserObject();
-            Element newPasswordNode = doc.createElement("password");
+    private static void exportAsXML(Element currentNode, Document doc, DefaultMutableTreeNode tree) {
+        Entry entry = (Entry)tree.getUserObject();
 
-            Element title = doc.createElement("title");
-            title.appendChild(doc.createTextNode(currentPassword.title));
-            newPasswordNode.appendChild(title);
+        System.out.println(entry);
 
-            Element login = doc.createElement("login");
-            login.appendChild(doc.createTextNode(currentPassword.login));
-            newPasswordNode.appendChild(login);
+        if (entry instanceof FolderEntry || tree.isRoot()) {
+            Element newFolderNode = doc.createElement(XMLTags.FOLDER);
 
-            Element password = doc.createElement("saved-password");
-            password.appendChild(doc.createTextNode(currentPassword.password));
-            newPasswordNode.appendChild(password);
-
-            return newPasswordNode;
-        }
-        else {
-            Element newFolderNode = doc.createElement("folder");
-
-            DefaultMutableTreeNode currentChild;
-            for(int i = 0 ; i < tree.getChildCount() ; i++) {
-                currentChild = (DefaultMutableTreeNode)tree.getChildAt(i);
-                newFolderNode.appendChild(FileManager.exportAsXML(newFolderNode, doc, currentChild));
+            if(tree.isRoot()) {
+                doc.appendChild(newFolderNode);
+            }
+            else {
+                newFolderNode.setAttribute("title", ((FolderEntry) entry).title);
+                currentNode.appendChild(newFolderNode);
             }
 
-            currentNode.appendChild(newFolderNode);
+            for (int i = 0; i < tree.getChildCount(); i++) {
+                exportAsXML(newFolderNode, doc, (DefaultMutableTreeNode) tree.getChildAt(i));
+            }
+        } else {
+            if (entry instanceof PasswordEntry) {
+                Element newPasswordNode = doc.createElement(XMLTags.PASSWORD);
 
-            return currentNode;
+                Element title = doc.createElement("title");
+                title.appendChild(doc.createTextNode(((PasswordEntry) entry).title));
+                newPasswordNode.appendChild(title);
+
+                Element login = doc.createElement("login");
+                login.appendChild(doc.createTextNode(((PasswordEntry) entry).login));
+                newPasswordNode.appendChild(login);
+
+                Element password = doc.createElement("saved-password");
+                password.appendChild(doc.createTextNode(((PasswordEntry) entry).password));
+                newPasswordNode.appendChild(password);
+
+                currentNode.appendChild(newPasswordNode);
+            }
         }
     }
 }
