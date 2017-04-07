@@ -46,12 +46,12 @@ public class JTreeWrapper {
     public void addEntry(Entry entry) {
         DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(entry);
 
-        if(!this.currentSelectedNode.isRoot()) { // we always append a new node as child of its parent node
+        if(!this.currentSelectedNode.isRoot() && !(currentSelectedNode.getUserObject() instanceof FolderEntry)) {
+            // we always append a new node as child of its parent node only if it is not a folder that is currently selected
             this.currentSelectedNode = (DefaultMutableTreeNode) this.currentSelectedNode.getParent();
         }
 
         this.treeModel.insertNodeInto(childNode, this.currentSelectedNode, this.currentSelectedNode.getChildCount());
-        this.GUITree.scrollPathToVisible(new TreePath(childNode.getPath()));
     }
 
     public Entry removeEntry() throws NoSuchElementException {
