@@ -64,6 +64,7 @@ public class JTreeWrapper {
 
         this.treeModel.insertNodeInto(childNode, this.currentSelectedNode, this.currentSelectedNode.getChildCount());
         this.GUITree.expandPath(new TreePath(folderNode.getPath()));
+        this.GUITree.setSelectionPath(new TreePath(childNode.getPath()));
     }
 
     public Entry removeEntry() throws NoSuchElementException {
