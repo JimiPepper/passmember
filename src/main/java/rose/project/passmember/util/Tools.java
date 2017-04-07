@@ -1,5 +1,7 @@
 package rose.project.passmember.util;
 
+import rose.project.passmember.util.entry.PasswordEntry;
+
 import java.util.List;
 import java.util.Random;
 

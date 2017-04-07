@@ -1,32 +1,26 @@
 package rose.project.passmember.gui;
 
+import rose.project.passmember.gui.event.ImplTreeSelectionListener;
 import rose.project.passmember.io.FileManager;
 import rose.project.passmember.gui.modal.TypePasswordDialog;
-import rose.project.passmember.util.PasswordEntry;
-import rose.project.passmember.util.tree.Node;
 
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.net.URL;
-import java.util.List;
 
 /**
  * Created by Lord Rose on 14/03/2017.
  */
-public class GUI extends JFrame implements TreeSelectionListener, ActionListener {
+public class GUI extends JFrame implements ActionListener {
     public static final String TITLE = "PassMember";
     private PassViewerPanel summary;
     private DefaultMutableTreeNode passwords;
     private JPanel rootPane;
     private JPanel actionBar;
-    private JTree tree;
+    private JTreeWrapper tree;
     private JMenuBar menuBar;
     private JOptionPane pane;
     private JDialog savePrompt;
@@ -57,11 +51,13 @@ public class GUI extends JFrame implements TreeSelectionListener, ActionListener
         this.rootPane = new JPanel();
         this.rootPane.setLayout(new BorderLayout());
 
-        this.tree = new JTree();
-        this.tree.setRootVisible(false);
-        this.tree.addTreeSelectionListener(this);
+        this.tree = new JTreeWrapper();
+        this.tree.getGUITree().setRootVisible(false);
 
         this.summary = new PassViewerPanel();
+
+        ImplTreeSelectionListener treeEvent = new ImplTreeSelectionListener(this.tree, this.summary);
+        this.tree.getGUITree().addTreeSelectionListener(treeEvent);
 
         this.getContentPane().add(rootPane);
         this.buildMenuBar();
@@ -103,12 +99,14 @@ public class GUI extends JFrame implements TreeSelectionListener, ActionListener
             }
         });
 
-        this.tree = new JTree(this.passwords);
-        this.tree.setRootVisible(false);
-        this.tree.addTreeSelectionListener(this);
+        this.tree = new JTreeWrapper(this.passwords);
+        this.tree.getGUITree().setRootVisible(false);
+
+        ImplTreeSelectionListener treeEvent = new ImplTreeSelectionListener(this.tree, this.summary);
+        this.tree.getGUITree().addTreeSelectionListener(treeEvent);
 
         this.rootPane.add(this.actionBar, BorderLayout.NORTH);
-        this.rootPane.add(this.tree, BorderLayout.WEST);
+        this.rootPane.add(this.tree.getGUITree(), BorderLayout.WEST);
         this.rootPane.add(this.summary, BorderLayout.CENTER);
         this.pack();
     }
@@ -205,23 +203,6 @@ public class GUI extends JFrame implements TreeSelectionListener, ActionListener
         return this.passwords != null;
     }
 
-    private void appendNewPassword(PasswordEntry password, DefaultMutableTreeNode node) {
-        node.add(new DefaultMutableTreeNode(password));
-        this.tree.repaint();
-    }
-
-    @Override
-    public void valueChanged(TreeSelectionEvent e) {
-        System.out.println(e.getPath().toString());
-        System.out.println(e.getPath().getLastPathComponent().toString());
-
-        System.out.println(e.getSource());
-
-        if(!this.tree.isSelectionEmpty()) { // to avoid calling on a delete entry
-            this.summary.loadSavedPassword((PasswordEntry) ((DefaultMutableTreeNode) this.tree.getLastSelectedPathComponent()).getUserObject());
-        }
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
@@ -284,16 +265,9 @@ public class GUI extends JFrame implements TreeSelectionListener, ActionListener
 
                 try {
                     this.fileHasChanged = true;
-
                     this.typePassDialog = new TypePasswordDialog(this);
 
-                    if(this.tree.isSelectionEmpty()) {
-                        this.appendNewPassword(this.typePassDialog.getPassword(), (DefaultMutableTreeNode)this.tree.getModel().getRoot());
-                    }
-                    else{
-                        this.appendNewPassword(this.typePassDialog.getPassword(), (DefaultMutableTreeNode) ((DefaultMutableTreeNode) this.tree.getLastSelectedPathComponent()).getParent());
-                    }
-
+                    this.tree.addEntry(this.typePassDialog.getPassword());
                     this.initGUI(this.passwords);
                 }
                 catch (UnsupportedOperationException uoe) {
@@ -303,31 +277,19 @@ public class GUI extends JFrame implements TreeSelectionListener, ActionListener
         }
         // TODO : Implémenter la mise à jour d'un mot de passe (voir pour charger la fenêtre modale avec des valeurs par défaut)
         else if(this.updateButton.equals(source)) {
+            /*
             if(this.hasLoadFile() && !this.tree.isSelectionEmpty()) {
                 String currentSelected = this.tree.getSelectionPath().getLastPathComponent().toString();
-                /*
-                for(PasswordEntry password : this.passwords) {
-                    if(password.title.equals(currentSelected)) {
-                        this.typePassDialog = new TypePasswordDialog(this);
-                        this.passwords.add(this.typePassDialog.getPassword());
 
-                        this.initGUI(this.passwords);
-
-                        this.summary.loadSavedPassword(password);
-                    }
-                }
-                */
             }
+            */
         }
         // TODO : Implémenter l'ajout d'un dossier de mot de passe
         else if(this.addFolderButton.equals(source)) {
 
         }
         else if(this.deleteButton.equals(source)) {
-            if(!this.tree.isSelectionEmpty()) {
-                DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
-                model.removeNodeFromParent(((DefaultMutableTreeNode) this.tree.getLastSelectedPathComponent()));
-            }
+            this.tree.removeEntry();
         }
     }
 }

@@ -3,11 +3,7 @@ package rose.project.passmember.io;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-import rose.project.passmember.util.PasswordEntry;
-import rose.project.passmember.util.exception.NoAncestorException;
-import rose.project.passmember.util.tree.DirectoryNode;
-import rose.project.passmember.util.tree.Node;
-import rose.project.passmember.util.tree.PasswordNode;
+import rose.project.passmember.util.entry.PasswordEntry;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 

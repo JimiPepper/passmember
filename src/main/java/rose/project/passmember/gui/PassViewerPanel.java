@@ -1,6 +1,6 @@
 package rose.project.passmember.gui;
 
-import rose.project.passmember.util.PasswordEntry;
+import rose.project.passmember.util.entry.PasswordEntry;
 
 import javax.swing.*;
 import java.awt.*;

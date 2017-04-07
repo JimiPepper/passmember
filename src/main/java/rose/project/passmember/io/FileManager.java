@@ -4,9 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 import rose.project.passmember.gui.GUI;
-import rose.project.passmember.util.PasswordEntry;
-import rose.project.passmember.util.tree.DirectoryNode;
-import rose.project.passmember.util.tree.Node;
+import rose.project.passmember.util.entry.PasswordEntry;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -19,8 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by Lord Rose on 17/03/2017.

@@ -1,11 +1,10 @@
-package rose.project.passmember.util;
+package rose.project.passmember.util.entry;
 
 /**
  * Created by Lord Rose on 14/03/2017.
  */
-public class PasswordEntry {
-    public int id; // Unique identifier for each password stored in a file saved by PassMember
-    public String title;
+public class PasswordEntry extends Entry {
+    public int id;
     public String login;
     public String password;
 
@@ -22,9 +21,5 @@ public class PasswordEntry {
         }
 
         return response;
-    }
-
-    public String toString() {
-        return title;
     }
 }
