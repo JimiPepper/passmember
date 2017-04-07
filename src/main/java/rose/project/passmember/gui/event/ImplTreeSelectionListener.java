@@ -37,7 +37,7 @@ public class ImplTreeSelectionListener implements TreeSelectionListener {
                 this.GUITree.setCurrentSelectedNode((DefaultMutableTreeNode) currentPath.getLastPathComponent());
             }
 
-            this.viewerPanel.loadSavedPassword((PasswordEntry) this.GUITree.getEntry());
+            this.viewerPanel.loadSavedPassword(this.GUITree.getEntry());
         }
     }
 }

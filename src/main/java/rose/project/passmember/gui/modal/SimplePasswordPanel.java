@@ -1,7 +1,7 @@
 package rose.project.passmember.gui.modal;
 
 import rose.project.passmember.util.Tools;
-import rose.project.passmember.util.TypePassword;
+import rose.project.passmember.util.ContentTypePassword;
 import rose.project.passmember.util.entry.Entry;
 import rose.project.passmember.util.entry.PasswordEntry;
 
@@ -100,7 +100,7 @@ public class SimplePasswordPanel extends EntryInputPanel implements ActionListen
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().equals(this.generatePasswordButton)) {
-            this.inputPassword.setText(Tools.randomPassword(TypePassword.ALL, true, 12));
+            this.inputPassword.setText(Tools.randomPassword(ContentTypePassword.ALL, true, 12));
             // this.repaint();
         }
     }

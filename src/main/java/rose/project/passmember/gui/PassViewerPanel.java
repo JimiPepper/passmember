@@ -1,5 +1,7 @@
 package rose.project.passmember.gui;
 
+import rose.project.passmember.util.entry.Entry;
+import rose.project.passmember.util.entry.FolderEntry;
 import rose.project.passmember.util.entry.PasswordEntry;
 
 import javax.swing.*;
@@ -12,25 +14,43 @@ import java.util.Map;
  * Created by Lord Rose on 17/03/2017.
  */
 public class PassViewerPanel extends JPanel {
-    private JLabel labelLogin;
-    private JLabel labelPassword;
+    private Font labelFont;
 
     public PassViewerPanel() {
-        Font labelFont = PassViewerPanel.retrieveFont();
-        this.labelLogin = new JLabel();
-        this.labelPassword = new JLabel();
-
-        this.labelLogin.setFont(labelFont);
-        this.labelPassword.setFont(labelFont);
+        this.labelFont = PassViewerPanel.retrieveFont();
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.add(this.labelLogin);
-        this.add(this.labelPassword);
     }
 
-    public void loadSavedPassword(PasswordEntry savedPassword) {
-        this.labelLogin.setText("Login : "+ savedPassword.login);
-        this.labelPassword.setText("mot de passe : "+ savedPassword.password);
+    public void loadSavedPassword(Entry loadedEntry) {
+        this.cleanUI();
+
+        if(loadedEntry instanceof PasswordEntry) {
+            PasswordEntry savedPassword = (PasswordEntry)loadedEntry;
+            JLabel labelLogin = new JLabel();
+            JLabel labelPassword = new JLabel();
+
+            labelLogin.setFont(this.labelFont);
+            labelPassword.setFont(this.labelFont);
+            labelLogin.setText("Login : " + savedPassword.login);
+            labelPassword.setText("mot de passe : " + savedPassword.password);
+
+            this.add(labelLogin);
+            this.add(labelPassword);
+        }
+        else {
+            FolderEntry savedFolder = (FolderEntry)loadedEntry;
+            JLabel labelTitle = new JLabel();
+            JLabel labelDescription = new JLabel();
+
+            labelTitle.setFont(this.labelFont);
+            labelDescription.setFont(this.labelFont);
+            labelTitle.setText("Name : " + savedFolder.title);
+            labelDescription.setText("Description : " + savedFolder.description);
+
+            this.add(labelTitle);
+            this.add(labelDescription);
+        }
 
         final PassViewerPanel me = this;
         SwingUtilities.invokeLater(new Runnable() {
@@ -43,8 +63,11 @@ public class PassViewerPanel extends JPanel {
     }
 
     public void cleanUI() {
-        this.labelLogin.setText("");
-        this.labelPassword.setText("");
+        for(Component component : this.getComponents()) {
+            if(component instanceof JLabel) {
+                this.remove(component);
+            }
+        }
     }
 
     private static Font retrieveFont() {

@@ -3,6 +3,7 @@ package rose.project.passmember.gui;
 import rose.project.passmember.gui.event.ImplTreeSelectionListener;
 import rose.project.passmember.io.FileManager;
 import rose.project.passmember.gui.modal.TypePasswordDialog;
+import rose.project.passmember.util.EntryType;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -265,9 +266,9 @@ public class GUI extends JFrame implements ActionListener {
 
                 try {
                     this.fileHasChanged = true;
-                    this.typePassDialog = new TypePasswordDialog(this);
+                    this.typePassDialog = new TypePasswordDialog(this, EntryType.SIMPLE_PASSWORD);
 
-                    this.tree.addEntry(this.typePassDialog.getPassword());
+                    this.tree.addEntry(this.typePassDialog.getEntry());
                     this.initGUI(this.passwords);
                 }
                 catch (UnsupportedOperationException uoe) {
@@ -286,7 +287,20 @@ public class GUI extends JFrame implements ActionListener {
         }
         // TODO : Implémenter l'ajout d'un dossier de mot de passe
         else if(this.addFolderButton.equals(source)) {
+            if(this.hasLoadFile()) {
+                boolean oldFileHasChanged = this.fileHasChanged;
 
+                try {
+                    this.fileHasChanged = true;
+                    this.typePassDialog = new TypePasswordDialog(this, EntryType.FOLDER);
+
+                    this.tree.addEntry(this.typePassDialog.getEntry());
+                    this.initGUI(this.passwords);
+                }
+                catch (UnsupportedOperationException uoe) {
+                    this.fileHasChanged = oldFileHasChanged; // restore previous value
+                }
+            }
         }
         else if(this.deleteButton.equals(source)) {
             this.tree.removeEntry();
