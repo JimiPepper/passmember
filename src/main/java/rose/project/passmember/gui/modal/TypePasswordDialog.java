@@ -1,7 +1,7 @@
 package rose.project.passmember.gui.modal;
 
 import rose.project.passmember.gui.GUI;
-import rose.project.passmember.util.entry.PasswordEntry;
+import rose.project.passmember.util.entry.Entry;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
 public class TypePasswordDialog extends JDialog implements ActionListener {
     private JButton cancelButton;
     private JButton okButton;
-    private PasswordRetrieverPanel inputPanel;
+    private EntryInputPanel inputPanel;
     private final String TITLE = "Veuillez saisir une nouvelle entrée";
 
     public TypePasswordDialog(GUI gui) {
@@ -56,7 +56,7 @@ public class TypePasswordDialog extends JDialog implements ActionListener {
         }
     }
 
-    public PasswordEntry getPassword() {
-       return this.inputPanel.getPassword();
+    public Entry getPassword() {
+       return this.inputPanel.getEntry();
     }
 }

@@ -2,6 +2,7 @@ package rose.project.passmember.gui.modal;
 
 import rose.project.passmember.util.Tools;
 import rose.project.passmember.util.TypePassword;
+import rose.project.passmember.util.entry.Entry;
 import rose.project.passmember.util.entry.PasswordEntry;
 
 import javax.swing.*;
@@ -11,7 +12,7 @@ import java.awt.event.ActionListener;
 /**
  * Created by Lord Rose on 30/03/2017.
  */
-public class SimplePasswordPanel extends PasswordRetrieverPanel implements ActionListener {
+public class SimplePasswordPanel extends EntryInputPanel implements ActionListener {
     private JTextField inputTitle;
     private JTextField inputLogin;
     private JTextField inputPassword;
@@ -82,7 +83,7 @@ public class SimplePasswordPanel extends PasswordRetrieverPanel implements Actio
     }
 
     @Override
-    public PasswordEntry getPassword() throws UnsupportedOperationException {
+    public Entry getEntry() throws UnsupportedOperationException {
         PasswordEntry input = new PasswordEntry();
 
         if (!this.isFilled()) {
