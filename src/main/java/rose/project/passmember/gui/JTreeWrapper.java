@@ -4,9 +4,8 @@ import rose.project.passmember.util.entry.Entry;
 import rose.project.passmember.util.entry.FolderEntry;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
+import javax.swing.tree.*;
+import java.awt.*;
 import java.util.NoSuchElementException;
 
 /**
@@ -23,6 +22,8 @@ public class JTreeWrapper {
         this.currentSelectedNode = this.passwordsTree;
         this.GUITree = new JTree();
         this.treeModel = (DefaultTreeModel) this.getGUITree().getModel();
+
+        this.GUITree.setCellRenderer(new CustomTreeCellRenderer());
     }
 
     public JTreeWrapper(DefaultMutableTreeNode root) {
@@ -30,6 +31,8 @@ public class JTreeWrapper {
         this.currentSelectedNode = this.passwordsTree;
         this.GUITree = new JTree(this.passwordsTree);
         this.treeModel = (DefaultTreeModel) this.getGUITree().getModel();
+
+        this.GUITree.setCellRenderer(new CustomTreeCellRenderer());
     }
 
     public JTree getGUITree() {
@@ -84,5 +87,25 @@ public class JTreeWrapper {
 
     public boolean hasSelection() {
         return !this.GUITree.isSelectionEmpty();
+    }
+
+    private static class CustomTreeCellRenderer extends DefaultTreeCellRenderer {
+        @Override
+        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+            super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+
+            Icon icon;
+            DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode)value;
+            if(currentNode.getUserObject() instanceof FolderEntry) { // we do not use leaf variable because a folder may be empty if it contains no password
+                icon = UIManager.getIcon("Tree.openIcon");
+            }
+            else {
+                icon = UIManager.getIcon("Tree.leafIcon");
+            }
+
+            this.setIcon(icon);
+
+            return this;
+        }
     }
 }
