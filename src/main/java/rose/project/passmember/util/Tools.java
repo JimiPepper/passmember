@@ -9,7 +9,7 @@ import java.util.Random;
  * Created by Lord Rose on 30/03/2017.
  */
 public class Tools {
-    public static String randomPassword(TypePassword type, boolean capitalize, int passwordLength) {
+    public static String randomPassword(ContentTypePassword type, boolean capitalize, int passwordLength) {
         char authorizedChar[] = getAuthorizedCharsPassword(type);
         int arrayLength = authorizedChar.length;
         Random rand = new Random();
@@ -32,7 +32,7 @@ public class Tools {
         return buffer.toString();
     }
 
-    private static char[] getAuthorizedCharsPassword(TypePassword type) {
+    private static char[] getAuthorizedCharsPassword(ContentTypePassword type) {
         String authorizedChars;
 
         switch (type) {
@@ -46,16 +46,16 @@ public class Tools {
                 authorizedChars = " !\"#$%&'()*+,-./:;<?@[\\]^_`{|}~>=°";
                 break;
             case ALPHANUM:
-                authorizedChars = new String(getAuthorizedCharsPassword(TypePassword.ALPHA)) + new String(getAuthorizedCharsPassword(TypePassword.NUMERIC));
+                authorizedChars = new String(getAuthorizedCharsPassword(ContentTypePassword.ALPHA)) + new String(getAuthorizedCharsPassword(ContentTypePassword.NUMERIC));
                 break;
             case ALPHASPEC:
-                authorizedChars = new String(getAuthorizedCharsPassword(TypePassword.ALPHA)) + new String(getAuthorizedCharsPassword(TypePassword.SPECIAL));
+                authorizedChars = new String(getAuthorizedCharsPassword(ContentTypePassword.ALPHA)) + new String(getAuthorizedCharsPassword(ContentTypePassword.SPECIAL));
                 break;
             case NUMSPEC:
-                authorizedChars = new String(getAuthorizedCharsPassword(TypePassword.NUMERIC)) + new String(getAuthorizedCharsPassword(TypePassword.SPECIAL));
+                authorizedChars = new String(getAuthorizedCharsPassword(ContentTypePassword.NUMERIC)) + new String(getAuthorizedCharsPassword(ContentTypePassword.SPECIAL));
                 break;
             default:
-                authorizedChars = new String(getAuthorizedCharsPassword(TypePassword.ALPHA)) + new String(getAuthorizedCharsPassword(TypePassword.NUMERIC)) + new String(getAuthorizedCharsPassword(TypePassword.SPECIAL));
+                authorizedChars = new String(getAuthorizedCharsPassword(ContentTypePassword.ALPHA)) + new String(getAuthorizedCharsPassword(ContentTypePassword.NUMERIC)) + new String(getAuthorizedCharsPassword(ContentTypePassword.SPECIAL));
         }
 
         return authorizedChars.toCharArray();
