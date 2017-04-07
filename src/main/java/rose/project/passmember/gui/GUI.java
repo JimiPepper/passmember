@@ -18,7 +18,6 @@ import java.net.URL;
 public class GUI extends JFrame implements ActionListener {
     public static final String TITLE = "PassMember";
     private PassViewerPanel summary;
-    private DefaultMutableTreeNode passwords;
     private JPanel rootPane;
     private JPanel actionBar;
     private JTreeWrapper tree;
@@ -27,6 +26,7 @@ public class GUI extends JFrame implements ActionListener {
     private JDialog savePrompt;
     private File loadedFile;
     private boolean fileHasChanged;
+    private boolean hasLoadedFile;
 
     /* ITEM DES MENUS */
     private JMenuItem ouvrir;
@@ -53,7 +53,7 @@ public class GUI extends JFrame implements ActionListener {
         this.rootPane.setLayout(new BorderLayout());
 
         this.tree = new JTreeWrapper();
-        this.tree.getGUITree().setRootVisible(false);
+        this.hasLoadedFile = false;
 
         this.summary = new PassViewerPanel();
 
@@ -76,6 +76,7 @@ public class GUI extends JFrame implements ActionListener {
 
         this.loadedFile = new File(filepath);
         DefaultMutableTreeNode listPasswords = FileManager.load(this.loadedFile);
+        this.hasLoadedFile = true;
         this.initGUI(listPasswords);
     }
 
@@ -87,7 +88,6 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     public void initGUI(DefaultMutableTreeNode passwords) {
-        this.passwords = passwords;
         final JPanel me_rootPane = this.rootPane;
 
         this.rootPane.removeAll();
@@ -100,8 +100,7 @@ public class GUI extends JFrame implements ActionListener {
             }
         });
 
-        this.tree = new JTreeWrapper(this.passwords);
-        this.tree.getGUITree().setRootVisible(false);
+        this.tree = new JTreeWrapper(passwords);
 
         ImplTreeSelectionListener treeEvent = new ImplTreeSelectionListener(this.tree, this.summary);
         this.tree.getGUITree().addTreeSelectionListener(treeEvent);
@@ -201,7 +200,7 @@ public class GUI extends JFrame implements ActionListener {
     }
 
     public boolean hasLoadFile() {
-        return this.passwords != null;
+        return this.hasLoadedFile;
     }
 
     @Override
@@ -217,7 +216,7 @@ public class GUI extends JFrame implements ActionListener {
         }
         else if(this.sauvegarder.equals(source)) {
             this.fileHasChanged = false;
-            FileManager.export(this.passwords, this.loadedFile);
+            FileManager.export(this.tree.getPasswordsTree(), this.loadedFile);
         }
         else if(this.fermer.equals(source)) {
             if(this.fileHasChanged) {
@@ -226,7 +225,8 @@ public class GUI extends JFrame implements ActionListener {
 
                 if(!response.equals(JOptionPane.CANCEL_OPTION)) {
                     if(response.equals(JOptionPane.YES_OPTION)) { // yes
-                        FileManager.export(this.passwords, this.loadedFile);
+                        FileManager.export(this.tree.getPasswordsTree(), this.loadedFile);
+                        this.hasLoadedFile = false;
                     }
 
                     this.fileHasChanged = false;
@@ -238,7 +238,6 @@ public class GUI extends JFrame implements ActionListener {
 
             // dans tous les cas, on ferme le fichier
             this.loadedFile = null;
-            this.passwords = null;
             this.cleanUI();
         }
         else if(this.quitter.equals(source)) {
@@ -248,7 +247,7 @@ public class GUI extends JFrame implements ActionListener {
 
                 if(!response.equals(JOptionPane.CANCEL_OPTION)) {
                     if(response.equals(JOptionPane.YES_OPTION)) { // yes
-                        FileManager.export(this.passwords, this.loadedFile);
+                        FileManager.export(this.tree.getPasswordsTree(), this.loadedFile);
                     }
 
                     this.fileHasChanged = false;
@@ -269,7 +268,6 @@ public class GUI extends JFrame implements ActionListener {
                     this.typePassDialog = new TypePasswordDialog(this, EntryType.SIMPLE_PASSWORD);
 
                     this.tree.addEntry(this.typePassDialog.getEntry());
-                    this.initGUI(this.passwords);
                 }
                 catch (UnsupportedOperationException uoe) {
                     this.fileHasChanged = oldFileHasChanged; // restore previous value
@@ -295,7 +293,6 @@ public class GUI extends JFrame implements ActionListener {
                     this.typePassDialog = new TypePasswordDialog(this, EntryType.FOLDER);
 
                     this.tree.addEntry(this.typePassDialog.getEntry());
-                    this.initGUI(this.passwords);
                 }
                 catch (UnsupportedOperationException uoe) {
                     this.fileHasChanged = oldFileHasChanged; // restore previous value

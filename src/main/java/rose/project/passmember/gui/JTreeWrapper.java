@@ -21,6 +21,10 @@ public class JTreeWrapper {
         this.passwordsTree = new DefaultMutableTreeNode(new FolderEntry());
         this.currentSelectedNode = this.passwordsTree;
         this.GUITree = new JTree();
+        this.GUITree.setExpandsSelectedPaths(true);
+        this.GUITree.setShowsRootHandles(true);
+        this.GUITree.setRootVisible(false);
+        this.GUITree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         this.treeModel = (DefaultTreeModel) this.getGUITree().getModel();
 
         this.GUITree.setCellRenderer(new CustomTreeCellRenderer());
@@ -30,7 +34,12 @@ public class JTreeWrapper {
         this.passwordsTree = (DefaultMutableTreeNode)root.getRoot(); // just to be sure
         this.currentSelectedNode = this.passwordsTree;
         this.GUITree = new JTree(this.passwordsTree);
+        this.GUITree.setExpandsSelectedPaths(true);
+        this.GUITree.setShowsRootHandles(true);
+        this.GUITree.setRootVisible(false);
+        this.GUITree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         this.treeModel = (DefaultTreeModel) this.getGUITree().getModel();
+
 
         this.GUITree.setCellRenderer(new CustomTreeCellRenderer());
     }
@@ -44,14 +53,17 @@ public class JTreeWrapper {
     }
 
     public void addEntry(Entry entry) {
+        DefaultMutableTreeNode folderNode = this.currentSelectedNode; // after appended a node, currentSelectedNode address is lost
         DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(entry);
 
         if(!this.currentSelectedNode.isRoot() && !(currentSelectedNode.getUserObject() instanceof FolderEntry)) {
             // we always append a new node as child of its parent node only if it is not a folder that is currently selected
             this.currentSelectedNode = (DefaultMutableTreeNode) this.currentSelectedNode.getParent();
+            folderNode = this.currentSelectedNode;
         }
 
         this.treeModel.insertNodeInto(childNode, this.currentSelectedNode, this.currentSelectedNode.getChildCount());
+        this.GUITree.expandPath(new TreePath(folderNode.getPath()));
     }
 
     public Entry removeEntry() throws NoSuchElementException {
