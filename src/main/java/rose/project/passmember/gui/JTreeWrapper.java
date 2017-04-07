@@ -20,12 +20,14 @@ public class JTreeWrapper {
 
     public JTreeWrapper() {
         this.passwordsTree = new DefaultMutableTreeNode(new FolderEntry());
+        this.currentSelectedNode = this.passwordsTree;
         this.GUITree = new JTree();
         this.treeModel = (DefaultTreeModel) this.getGUITree().getModel();
     }
 
     public JTreeWrapper(DefaultMutableTreeNode root) {
         this.passwordsTree = (DefaultMutableTreeNode)root.getRoot(); // just to be sure
+        this.currentSelectedNode = this.passwordsTree;
         this.GUITree = new JTree(this.passwordsTree);
         this.treeModel = (DefaultTreeModel) this.getGUITree().getModel();
     }
