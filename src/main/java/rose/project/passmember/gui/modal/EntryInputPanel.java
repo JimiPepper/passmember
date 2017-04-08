@@ -9,4 +9,5 @@ import javax.swing.*;
 abstract class EntryInputPanel extends JPanel {
     protected abstract boolean isFilled();
     public abstract Entry getEntry() throws UnsupportedOperationException;
+    public abstract void populate(Entry entry) throws IllegalArgumentException;
 }
