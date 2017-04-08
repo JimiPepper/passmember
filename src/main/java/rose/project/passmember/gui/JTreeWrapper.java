@@ -72,7 +72,6 @@ public class JTreeWrapper {
             Entry removedEntry = (Entry)this.currentSelectedNode.getUserObject();
             this.treeModel.removeNodeFromParent(this.currentSelectedNode);
             this.currentSelectedNode = this.passwordsTree; // we select the root node
-            // TODO : check if the GUI must be updated after removing an element from its model
 
             return removedEntry;
         }
@@ -82,7 +81,10 @@ public class JTreeWrapper {
     }
 
     public void updateEntry(Entry entry) {
-        // TODO : Implement passmember.gui.JTreeWrapper.updateEntry()
+        this.currentSelectedNode.setUserObject(entry);
+        this.treeModel.reload();
+        this.GUITree.setSelectionPath(new TreePath(this.currentSelectedNode.getPath())); // to be sure to reload the tree GUI
+        this.GUITree.repaint();
     }
 
     public Entry getEntry() throws NoSuchElementException {

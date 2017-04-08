@@ -60,6 +60,20 @@ public class FolderPanel extends EntryInputPanel {
         return !this.inputTitle.getText().isEmpty();
     }
 
+    public void populate(Entry entry) throws IllegalArgumentException {
+        if(entry == null) {
+            throw new IllegalArgumentException("Impossible to populate from a null entry");
+        }
+        else if(!(entry instanceof FolderEntry)) {
+            throw new IllegalArgumentException("Expected a FolderEntry instance");
+        }
+        else {
+            FolderEntry folderEntry = (FolderEntry) entry;
+            this.inputTitle.setText(folderEntry.title);
+            this.inputDescription.setText(folderEntry.description);
+        }
+    }
+
     @Override
     public Entry getEntry() throws UnsupportedOperationException {
 

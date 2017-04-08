@@ -3,6 +3,7 @@ package rose.project.passmember.io;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+import rose.project.passmember.util.entry.FolderEntry;
 import rose.project.passmember.util.entry.PasswordEntry;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -30,8 +31,15 @@ public class SAXHandlerPassmember extends DefaultHandler {
                 this.loadedSavedPassword = new DefaultMutableTreeNode();
             }
             else {
-                DefaultMutableTreeNode newFolder = new DefaultMutableTreeNode();
-                ((DefaultMutableTreeNode)this.loadedSavedPassword.getParent()).add(newFolder);
+                FolderEntry folderEntry = new FolderEntry();
+                folderEntry.title = attributes.getValue("title");
+                DefaultMutableTreeNode newFolder = new DefaultMutableTreeNode(folderEntry);
+                if(this.loadedSavedPassword.isRoot()) {
+                    this.loadedSavedPassword.add(newFolder);
+                }
+                else {
+                    ((DefaultMutableTreeNode) this.loadedSavedPassword.getParent()).add(newFolder);
+                }
 
                 this.loadedSavedPassword = newFolder; // move pointer to current folder node that will be populated
             }

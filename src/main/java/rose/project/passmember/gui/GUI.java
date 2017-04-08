@@ -4,6 +4,7 @@ import rose.project.passmember.gui.event.ImplTreeSelectionListener;
 import rose.project.passmember.io.FileManager;
 import rose.project.passmember.gui.modal.TypePasswordDialog;
 import rose.project.passmember.util.EntryType;
+import rose.project.passmember.util.entry.Entry;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -11,6 +12,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.net.URL;
+import java.util.NoSuchElementException;
 
 /**
  * Created by Lord Rose on 14/03/2017.
@@ -266,6 +268,7 @@ public class GUI extends JFrame implements ActionListener {
                 try {
                     this.fileHasChanged = true;
                     this.typePassDialog = new TypePasswordDialog(this, EntryType.SIMPLE_PASSWORD);
+                    this.typePassDialog.setVisible(true);
 
                     this.tree.addEntry(this.typePassDialog.getEntry());
                 }
@@ -276,12 +279,19 @@ public class GUI extends JFrame implements ActionListener {
         }
         // TODO : Implémenter la mise à jour d'un mot de passe (voir pour charger la fenêtre modale avec des valeurs par défaut)
         else if(this.updateButton.equals(source)) {
-            /*
-            if(this.hasLoadFile() && !this.tree.isSelectionEmpty()) {
-                String currentSelected = this.tree.getSelectionPath().getLastPathComponent().toString();
+            if(this.hasLoadFile()) {
+                boolean oldFileHasChanged = this.fileHasChanged;
 
+                try {
+                    this.fileHasChanged = true;
+                    this.typePassDialog = new TypePasswordDialog(this, this.tree.getEntry());
+                    this.typePassDialog.setVisible(true);
+                    this.tree.updateEntry(this.typePassDialog.getEntry());
+                }
+                catch (NoSuchElementException nsee) { // if no item is selected from the tree, no update is possible
+                    this.fileHasChanged = oldFileHasChanged;
+                }
             }
-            */
         }
         // TODO : Implémenter l'ajout d'un dossier de mot de passe
         else if(this.addFolderButton.equals(source)) {
@@ -291,6 +301,7 @@ public class GUI extends JFrame implements ActionListener {
                 try {
                     this.fileHasChanged = true;
                     this.typePassDialog = new TypePasswordDialog(this, EntryType.FOLDER);
+                    this.typePassDialog.setVisible(true);
 
                     this.tree.addEntry(this.typePassDialog.getEntry());
                 }

@@ -3,6 +3,7 @@ package rose.project.passmember.gui.modal;
 import rose.project.passmember.gui.GUI;
 import rose.project.passmember.util.EntryType;
 import rose.project.passmember.util.entry.Entry;
+import rose.project.passmember.util.entry.PasswordEntry;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +47,15 @@ public class TypePasswordDialog extends JDialog implements ActionListener {
         rootPanel.add(validationPanel, BorderLayout.SOUTH);
 
         this.pack();
-        this.setVisible(true);
+    }
+
+    public TypePasswordDialog(GUI gui, Entry defaultEntry) {
+        this(
+                gui,
+                (defaultEntry instanceof PasswordEntry) ? EntryType.SIMPLE_PASSWORD : EntryType.FOLDER
+        ); // not the most beautiful way to call the TypePasswordDialog's constructor
+
+        this.inputPanel.populate(defaultEntry);
     }
 
     @Override

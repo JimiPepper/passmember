@@ -88,7 +88,8 @@ public class SimplePasswordPanel extends EntryInputPanel implements ActionListen
 
         if (!this.isFilled()) {
             throw new UnsupportedOperationException("Tous les champs n'ont pas été remplis");
-        } else {
+        }
+        else {
             input.title = this.inputTitle.getText().trim();
             input.login = this.inputLogin.getText().trim();
             input.password = this.inputPassword.getText();
@@ -98,10 +99,25 @@ public class SimplePasswordPanel extends EntryInputPanel implements ActionListen
     }
 
     @Override
+    public void populate(Entry entry) throws IllegalArgumentException {
+        if(entry == null) {
+            throw new IllegalArgumentException("Impossible to populate from a null entry");
+        }
+        else if(!(entry instanceof PasswordEntry)) {
+            throw new IllegalArgumentException("Expected a PasswordEntry instance");
+        }
+        else {
+            PasswordEntry passwordEntry = (PasswordEntry)entry;
+            this.inputTitle.setText(passwordEntry.title);
+            this.inputLogin.setText(passwordEntry.login);
+            this.inputPassword.setText(passwordEntry.password);
+        }
+    }
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource().equals(this.generatePasswordButton)) {
             this.inputPassword.setText(Tools.randomPassword(ContentTypePassword.ALL, true, 12));
-            // this.repaint();
         }
     }
 }
