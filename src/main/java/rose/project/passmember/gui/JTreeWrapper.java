@@ -40,6 +40,7 @@ public class JTreeWrapper {
         this.GUITree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         this.treeModel = (DefaultTreeModel) this.getGUITree().getModel();
 
+        this.expand(this.passwordsTree);
 
         this.GUITree.setCellRenderer(new CustomTreeCellRenderer());
     }
@@ -98,6 +99,20 @@ public class JTreeWrapper {
 
     public void setCurrentSelectedNode(DefaultMutableTreeNode newSelectedNode) {
         this.currentSelectedNode = newSelectedNode;
+    }
+
+    public void expand(DefaultMutableTreeNode node) {
+        Entry entry = (Entry)node.getUserObject();
+
+        if(entry instanceof FolderEntry) {
+            if(((FolderEntry) entry).show) {
+                this.GUITree.expandPath(new TreePath(node.getPath()));
+
+                for(int i = 0 ; i < node.getChildCount() ; i++) {
+                    expand((DefaultMutableTreeNode)node.getChildAt(i));
+                }
+            }
+        }
     }
 
     public boolean hasSelection() {

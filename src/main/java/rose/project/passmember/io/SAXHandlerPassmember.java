@@ -27,19 +27,18 @@ public class SAXHandlerPassmember extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {
         if(name.equalsIgnoreCase(XMLTags.FOLDER)) {
-            if(this.loadedSavedPassword == null) {
-                this.loadedSavedPassword = new DefaultMutableTreeNode();
+            if(this.loadedSavedPassword == null) { // no root
+                FolderEntry folderEntry = new FolderEntry();
+                folderEntry.title = "root";
+                folderEntry.show = true;
+                this.loadedSavedPassword = new DefaultMutableTreeNode(folderEntry);
             }
             else {
                 FolderEntry folderEntry = new FolderEntry();
                 folderEntry.title = attributes.getValue("title");
+                folderEntry.show = attributes.getValue("show").equals("yes") ? true : false;
                 DefaultMutableTreeNode newFolder = new DefaultMutableTreeNode(folderEntry);
-                if(this.loadedSavedPassword.isRoot()) {
-                    this.loadedSavedPassword.add(newFolder);
-                }
-                else {
-                    ((DefaultMutableTreeNode) this.loadedSavedPassword.getParent()).add(newFolder);
-                }
+                this.loadedSavedPassword.add(newFolder);
 
                 this.loadedSavedPassword = newFolder; // move pointer to current folder node that will be populated
             }
@@ -65,10 +64,6 @@ public class SAXHandlerPassmember extends DefaultHandler {
 
     @Override
     public void endElement(String uri, String localName, String name) throws SAXException {
-        if(name.equalsIgnoreCase(XMLTags.FOLDER) && !this.loadedSavedPassword.isRoot()) {
-            this.loadedSavedPassword = ((DefaultMutableTreeNode)this.loadedSavedPassword.getParent());
-        }
-
         if(name.equalsIgnoreCase(XMLTags.PASSWORD)) {
             this.loadedSavedPassword.add(new DefaultMutableTreeNode(currentPassword));
             this.bWebsite = false;
@@ -92,17 +87,14 @@ public class SAXHandlerPassmember extends DefaultHandler {
         String content = new String(chars, start, length);
 
         if(this.bTitle) {
-            System.out.println("Title : "+ content);
             this.currentPassword.title = content;
         }
 
         if(this.bLogin) {
-            System.out.println("Login : "+ content);
             this.currentPassword.login = content;
         }
 
         if(this.bSavedPassword) {
-            System.out.println("Password : "+ content);
             this.currentPassword.password = content;
         }
     }

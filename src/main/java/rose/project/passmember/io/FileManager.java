@@ -164,6 +164,7 @@ public class FileManager {
             }
             else {
                 newFolderNode.setAttribute("title", ((FolderEntry) entry).title);
+                newFolderNode.setAttribute("show", ((FolderEntry) entry).show ? "yes" : "no");
                 currentNode.appendChild(newFolderNode);
             }
 

@@ -1,6 +1,6 @@
 package rose.project.passmember.gui;
 
-import rose.project.passmember.gui.event.ImplTreeSelectionListener;
+import rose.project.passmember.gui.event.ImplTreeSelectionExpandListener;
 import rose.project.passmember.io.FileManager;
 import rose.project.passmember.gui.modal.TypePasswordDialog;
 import rose.project.passmember.util.EntryType;
@@ -58,9 +58,6 @@ public class GUI extends JFrame implements ActionListener {
 
         this.summary = new PassViewerPanel();
 
-        ImplTreeSelectionListener treeEvent = new ImplTreeSelectionListener(this.tree, this.summary);
-        this.tree.getGUITree().addTreeSelectionListener(treeEvent);
-
         this.getContentPane().add(rootPane);
         this.buildMenuBar();
         this.buildActionBar();
@@ -79,6 +76,10 @@ public class GUI extends JFrame implements ActionListener {
         DefaultMutableTreeNode listPasswords = FileManager.load(this.loadedFile);
         this.hasLoadedFile = true;
         this.initGUI(listPasswords);
+
+        ImplTreeSelectionExpandListener treeEvent = new ImplTreeSelectionExpandListener(this.tree, this.summary);
+        this.tree.getGUITree().addTreeSelectionListener(treeEvent);
+        this.tree.getGUITree().addTreeWillExpandListener(treeEvent);
     }
 
     private void initIconFrame() {
@@ -103,7 +104,7 @@ public class GUI extends JFrame implements ActionListener {
 
         this.tree = new JTreeWrapper(passwords);
 
-        ImplTreeSelectionListener treeEvent = new ImplTreeSelectionListener(this.tree, this.summary);
+        ImplTreeSelectionExpandListener treeEvent = new ImplTreeSelectionExpandListener(this.tree, this.summary);
         this.tree.getGUITree().addTreeSelectionListener(treeEvent);
 
         this.rootPane.add(this.actionBar, BorderLayout.NORTH);
