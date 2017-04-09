@@ -4,7 +4,6 @@ import rose.project.passmember.gui.event.ImplTreeSelectionListener;
 import rose.project.passmember.io.FileManager;
 import rose.project.passmember.gui.modal.TypePasswordDialog;
 import rose.project.passmember.util.EntryType;
-import rose.project.passmember.util.entry.Entry;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
