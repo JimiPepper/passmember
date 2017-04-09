@@ -1,5 +1,6 @@
 package rose.project.passmember.gui.modal;
 
+import rose.project.passmember.gui.ErrorPanel;
 import rose.project.passmember.gui.GUI;
 import rose.project.passmember.util.EntryType;
 import rose.project.passmember.util.entry.Entry;
@@ -65,8 +66,15 @@ public class TypePasswordDialog extends JDialog implements ActionListener {
             this.dispose();
         }
         else if(e.getSource().equals(this.okButton)) {
-            this.setVisible(false);
-            this.dispose();
+            /* TEST IF THE FORM IS WELL FILLED */
+            if(this.inputPanel.isFilled()) {
+                this.setVisible(false);
+                this.dispose();
+            }
+            else {
+                this.getContentPane().add(new ErrorPanel(this.inputPanel.getErrorMessage()), BorderLayout.NORTH);
+                this.pack(); // display and compute the new look'n feel
+            }
         }
     }
 

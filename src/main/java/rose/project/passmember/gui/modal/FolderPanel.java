@@ -56,7 +56,7 @@ public class FolderPanel extends EntryInputPanel {
     }
 
     @Override
-    protected boolean isFilled() {
+    public boolean isFilled() {
         return !this.inputTitle.getText().isEmpty();
     }
 
@@ -86,6 +86,16 @@ public class FolderPanel extends EntryInputPanel {
             newFolder.description = this.inputDescription.getText().trim();
 
             return newFolder;
+        }
+    }
+
+    @Override
+    public String getErrorMessage() throws IllegalStateException {
+        if(!this.isFilled()) {
+            return new String("The form needs to be filled with a title");
+        }
+        else {
+            throw new IllegalStateException("The form is well filled, no error message can't be compute");
         }
     }
 }

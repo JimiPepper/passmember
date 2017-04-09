@@ -78,7 +78,7 @@ public class SimplePasswordPanel extends EntryInputPanel implements ActionListen
     }
 
     @Override
-    protected boolean isFilled() {
+    public boolean isFilled() {
         return !this.inputTitle.getText().isEmpty() && !this.inputLogin.getText().isEmpty() && !this.inputPassword.getText().isEmpty();
     }
 
@@ -111,6 +111,16 @@ public class SimplePasswordPanel extends EntryInputPanel implements ActionListen
             this.inputTitle.setText(passwordEntry.title);
             this.inputLogin.setText(passwordEntry.login);
             this.inputPassword.setText(passwordEntry.password);
+        }
+    }
+
+    @Override
+    public String getErrorMessage() throws IllegalStateException {
+        if(!this.isFilled()) {
+            return new String("The form needs to be filled with a title, login and a password ");
+        }
+        else {
+            throw new IllegalStateException("The form is well filled, no error message can't be compute");
         }
     }
 
